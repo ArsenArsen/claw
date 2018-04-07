@@ -64,6 +64,6 @@ def interpret(claw, execute=True):
             command = import_module(command_file)
             try:
                 command.claw_exec(claw, argv)
-            except ClawParserError as e:
+            except ClawParserError as error:
                 print("Parse error on " + line + ": ")
-                print(e)
+                print(error)

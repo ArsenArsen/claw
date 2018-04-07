@@ -6,7 +6,6 @@ The clawfile interpreter will go through the commands in the clawfile and execut
 
 from claw.interpreter import clawfile
 from claw.utils import trim_docstring
-from os.path import join
 
 def claw_exec(claw):
     # pylint: disable=missing-docstring

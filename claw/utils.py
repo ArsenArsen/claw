@@ -1,8 +1,9 @@
 """Claw helper functions"""
 
 from importlib import util as iul
-from os.path import dirname, realpath, relpath
-from os import sep, linesep
+from os.path import join, dirname, realpath, relpath, isdir
+from os import unlink, listdir, sep, linesep
+from shutil import rmtree
 import sys
 
 def import_module(path: str):
@@ -16,7 +17,7 @@ def import_module(path: str):
 
 # Taken from PEP
 # https://www.python.org/dev/peps/pep-0257/
-def trim_docstring(docstring):
+def trim_docstring(docstring: str):
     """
     Handles trimming docstrings, according to the PEP
 
@@ -46,6 +47,15 @@ def trim_docstring(docstring):
     # Return a single string:
     return '\n'.join(trimmed)
 
-def indent_block(text, indent="\t", count=1):
+def indent_block(text: str, indent="\t", count=1):
     """Indents a block of text"""
     return linesep.join([(indent*count + line).rstrip() for line in text.splitlines()])
+
+def clean_directory(directory: str):
+    """Cleans a directory but keeps the directory itself"""
+    for filename in listdir(directory):
+        path = join(directory, filename)
+        if isdir(path):
+            rmtree(path)
+        else:
+            unlink(path)
