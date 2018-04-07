@@ -24,3 +24,19 @@ Currently, by default, there are two filter categories: path and source parse fi
 Path filters are just mapping a few `os.path` methods into Jinja2 filters.  
 The source parse category provides two flters: `header` and `markdown`, which read the header and the markdown parts of a source file, respectively.  
 Both of these filters take only a path argument.
+
+## Source files
+The source files consist of three parts:
+
+* The header, which is a YAML file which provides variables to the used template,
+* The dash seperator, which is a three-dash seperator line between the header and the markdown, and
+* The markdown, which gets compiled and set to the `body` template variable.
+Example:
+```markdown
+title: My homepage
+---
+# My Homepage
+## A cool web page
+Powered by ***claw***
+```
+
