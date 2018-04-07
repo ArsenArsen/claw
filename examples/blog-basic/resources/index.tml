@@ -1,0 +1,10 @@
+<head>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+</head>
+<body>
+    {{ body }}
+    <ul>
+        {% for post in post_index %}<li><a href="posts/{{ (post|basename|splitext)[1] }}.html">{{ (post|header).title }}</a>{% endfor %}
+    </ul>
+</body>

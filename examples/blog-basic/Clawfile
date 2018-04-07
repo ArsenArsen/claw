@@ -1,0 +1,4 @@
+glob source post_index posts/*.md
+template posts/*.md post.tml
+template index.md index.tml
+static *.css
