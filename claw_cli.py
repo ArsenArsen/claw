@@ -48,7 +48,8 @@ Claw = namedtuple("Claw", [
     "context"
 ])
 
-def claw_construct(commands: str, docstring: str, args: list, dir: str, src=None, res=None, out=None) -> Claw:
+# pylint: disable=too-many-arguments
+def claw_construct(commands: str, args: list, directory: str, src=None, res=None, out=None) -> Claw:
     """Constructs a Claw named tuple"""
     jinja = Environment()
     filterpath = join(dirname(__file__), "claw/filters")
@@ -58,13 +59,14 @@ def claw_construct(commands: str, docstring: str, args: list, dir: str, src=None
         module = import_module(filters)
         for new_filter in module.claw_filters():
             jinja.filters[new_filter.__name__] = new_filter
-    return Claw(commands=commands, docstring=docstring, args=args,
-                dir=dir, source_dir=src or join(dir, "src"),
-                resource_dir=res or join(dir, "resources"),
-                output_dir=out or join(dir, "output"),
+    return Claw(commands=commands, docstring=__doc__, args=args,
+                dir=directory, source_dir=src or join(directory, "src"),
+                resource_dir=res or join(directory, "resources"),
+                output_dir=out or join(directory, "output"),
                 jinja=jinja, context={})
 
-if __name__ == "__main__":
+def main():
+    """Entry point to claw"""
     args = sys.argv
     clawdir = dirname(realpath(__file__))
     commands = glob(join(clawdir, "claw/commands/cmd_*.py"))
@@ -73,7 +75,6 @@ if __name__ == "__main__":
     if len(args) > 1:
         if len(args) > 3 and args[1] == "-c":
             clawwd = realpath(args[2])
-            print(clawwd)
             if not exists(clawwd):
                 print("Claw directory does not exist")
                 exit(1)
@@ -82,10 +83,13 @@ if __name__ == "__main__":
             if basename(cmd)[4:-3] == args[1]:
                 execmod = import_module(cmd)
                 break
-
-        cf = claw_construct(commands=commands, args=args[1:], docstring=__doc__, dir=clawwd)
+        claw_ctx = claw_construct(commands=commands, args=args[1:], directory=clawwd)
         if exists(join(clawwd, "Clawfile")):
-            clawfile.interpret(cf, False)
-        execmod.claw_exec(cf)
+            clawfile.interpret(claw_ctx, False)
+        execmod.claw_exec(claw_ctx)
     else:
-        execmod.claw_exec(claw_construct(commands=commands, args=['help'], docstring=__doc__, dir=clawwd))
+        execmod.claw_exec(claw_construct(commands=commands, args=['help'], directory=clawwd))
+
+
+if __name__ == "__main__":
+    main()
