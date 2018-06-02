@@ -23,7 +23,7 @@ Special case comands are:
 from os.path import exists, join, dirname, basename
 from shlex import split
 from claw.utils import import_module
-from claw.errors import ClawParserError
+from claw.errors import ClawParserError, ClawUnsupportedOpError
 
 def interpret(claw, execute=True):
     """Loads and interprets a clawfile"""
@@ -61,9 +61,12 @@ def interpret(claw, execute=True):
                 print("Unknown command " + argv[0] + " on line " + str(line))
                 exit(1)
 
-            command = import_module(command_file)
             try:
+                command = import_module(command_file)
                 command.claw_exec(claw, argv)
             except ClawParserError as error:
-                print("Parse error on " + line + ": ")
+                print("Parse error on " + str(line) + ": ")
+                print(error)
+            except ClawUnsupportedOpError as error:
+                print("Operation unsupported: ")
                 print(error)
