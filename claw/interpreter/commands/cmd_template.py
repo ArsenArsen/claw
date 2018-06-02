@@ -52,6 +52,8 @@ def claw_exec(claw, args):
                     markdown_data += line
 
         header = yaml.load(header_data)
+        if not header:
+            header = {}
         header["body"] = mistune.markdown(markdown_data)
         header = {**claw.context, **header}
         with open(join(claw.resource_dir, args[2]), "r") as template:

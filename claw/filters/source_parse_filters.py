@@ -24,10 +24,11 @@ def markdown(path):
     with open(path, "r") as toread:
         begin = False
         for line in toread:
-            if line == "---":
+            if line == "---\n":
                 begin = True
             elif begin:
                 mddata += line
+    return mddata
 
 def claw_filters():
     # pylint: disable=missing-docstring

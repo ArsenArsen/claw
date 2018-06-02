@@ -13,7 +13,7 @@ And to use this example in a template later, you can:
     ...
     <ul>
         {% for post in post_index %}
-            <a href="posts/{{ (post|basename|splitext)[1] }}.html">{{ (post|header).title }}</a>
+            <a href="posts/{{ (post|basename|splitext)[0] }}.html">{{ (post|header).title }}</a>
         {% endfor %}
     </ul>
     ...
