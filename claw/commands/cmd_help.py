@@ -6,6 +6,7 @@ Side note, you can use this as an example interface for claw commands.
 
 import os
 from claw.utils import import_module, trim_docstring, indent_block
+from claw.errors import ClawUnsupportedOpError
 
 def claw_exec(claw):
     """
@@ -20,10 +21,13 @@ def claw_exec(claw):
         help_dict = {}
         longest_name = 1
         for cmd in claw.commands:
-            cmod = import_module(cmd)
-            name = os.path.basename(cmd)[4:-3]
-            help_dict[name] = cmod.claw_help(claw, True)
-            longest_name = max(len(name), longest_name)
+            try:
+                cmod = import_module(cmd)
+                name = os.path.basename(cmd)[4:-3]
+                help_dict[name] = cmod.claw_help(claw, True)
+                longest_name = max(len(name), longest_name)
+            except ClawUnsupportedOpError as error:
+                help_dict[name] = "UNSUPPORTED: " + str(error)
         print("Commands:")
         for cmd, help_str in help_dict.items():
             print("\t" + cmd

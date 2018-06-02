@@ -6,6 +6,7 @@ and the result is some value from the source.
 """
 
 import yaml
+from claw.renderer import render
 
 def header(path):
     """Reads and returns a file's header"""
@@ -30,6 +31,10 @@ def markdown(path):
                 mddata += line
     return mddata
 
+def mdrender(data):
+    """Render markdown data"""
+    return render(data)
+
 def claw_filters():
     # pylint: disable=missing-docstring
-    return [markdown, header]
+    return [markdown, header, mdrender]

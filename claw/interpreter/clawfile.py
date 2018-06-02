@@ -58,14 +58,14 @@ def interpret(claw, execute=True):
             command_file = join(dirname(__file__), "commands/cmd_" + basename(argv[0]) + ".py")
             if not exists(command_file):
                 print("Error in parsing clawfile")
-                print("Unknown command " + argv[0] + " on line " + str(line))
+                print("Unknown command " + argv[0] + " on line " + str(line + 1))
                 exit(1)
 
             try:
                 command = import_module(command_file)
                 command.claw_exec(claw, argv)
             except ClawParserError as error:
-                print("Parse error on " + str(line) + ": ")
+                print("Parse error on " + str(line + 1) + ": ")
                 print(error)
             except ClawUnsupportedOpError as error:
                 print("Operation unsupported: ")

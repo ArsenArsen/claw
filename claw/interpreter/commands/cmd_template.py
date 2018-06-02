@@ -22,13 +22,14 @@ Would result in:
     <p>Welcome to my website!</p>
     <h5>h5</h5></body>
 """
+# pylint: disable=invalid-name,W0702,W0622
 
 from glob import glob
 from os import makedirs
 from os.path import dirname, join, relpath, realpath, splitext
-import mistune
 import yaml
 from claw.errors import ClawParserError
+from claw.renderer import render
 
 def claw_exec(claw, args):
     """Does the templating"""
@@ -54,7 +55,8 @@ def claw_exec(claw, args):
         header = yaml.load(header_data)
         if not header:
             header = {}
-        header["body"] = mistune.markdown(markdown_data)
+        header["body"] = render(markdown_data)
+        header["file"] = realpath(file)
         header = {**claw.context, **header}
         with open(join(claw.resource_dir, args[2]), "r") as template:
             with open(output_file, "w") as output:

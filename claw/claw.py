@@ -30,7 +30,7 @@ from os.path import exists, join, realpath, dirname, basename
 import sys
 from glob import glob
 from collections import namedtuple
-from jinja2 import Environment
+from jinja2 import Environment, FileSystemLoader
 from claw.utils import import_module
 from claw.interpreter import clawfile
 from claw.errors import ClawUnsupportedOpError
@@ -50,7 +50,8 @@ Claw = namedtuple("Claw", [
 # pylint: disable=too-many-arguments
 def claw_construct(commands: str, args: list, directory: str, src=None, res=None, out=None) -> Claw:
     """Constructs a Claw named tuple"""
-    jinja = Environment()
+    resr = res or join(directory, "resources")
+    jinja = Environment(loader=FileSystemLoader(resr, followlinks=True))
     filterpath = join(dirname(__file__), "filters")
     for filters in glob(join(filterpath, "*.py")):
         if basename(filters) == "__init__.py":
@@ -60,7 +61,7 @@ def claw_construct(commands: str, args: list, directory: str, src=None, res=None
             jinja.filters[new_filter.__name__] = new_filter
     return Claw(commands=commands, docstring=__doc__, args=args,
                 dir=directory, source_dir=src or join(directory, "src"),
-                resource_dir=res or join(directory, "resources"),
+                resource_dir=resr,
                 output_dir=out or join(directory, "output"),
                 jinja=jinja, context={})
 
