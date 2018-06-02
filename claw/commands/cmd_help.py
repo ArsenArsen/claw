@@ -16,7 +16,7 @@ def claw_exec(claw):
     if a command argument is supplied, it's long help
     """
     if len(claw.args) != 2:
-        print(claw.docstring)
+        print(trim_docstring(claw.docstring))
         help_dict = {}
         longest_name = 1
         for cmd in claw.commands:
