@@ -1,9 +1,15 @@
 """
 Compiles all files matching a glob and puts them into the output directory.
 
+Usage:
+    template <glob> <template> [target]
+
 The command will loop over all files matching a provided glob, compile them with markdown,
 and insert them into the template's `body' slot,
 while also providing the values of all variables defined in the header to the templating engine.
+The target parameter can be used to override the default resulting location.
+The default location is determined like so:
+    splitext(join(output_dir, relpath(file, source_dir)))[0] + ".html"
 
 An example of an input file would be:
     title: My Very Own Website
@@ -31,13 +37,20 @@ import yaml
 from claw.errors import ClawParserError
 from claw.renderer import render
 
+
 def claw_exec(claw, args):
     """Does the templating"""
-    if len(args) != 3:
+    if len(args) != 3 and len(args) != 4:
         raise ClawParserError("template takes two arguments. template <source_glob> <template_in>")
     files = glob(join(claw.source_dir, args[1]))
     for file in files:
-        output_file = splitext(join(claw.output_dir, relpath(file, claw.source_dir)))[0] + ".html"
+        output_file = None
+        if len(args) == 3:
+            output_file = splitext(join(claw.output_dir,
+                                        relpath(file,
+                                                claw.source_dir)))[0] + ".html"
+        else:
+            output_file = join(claw.output_dir, args[3])
         makedirs(dirname(output_file), exist_ok=True)
         markdown_data = ""
         header_data = ""
