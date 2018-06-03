@@ -16,13 +16,14 @@ As of now the following commands are available (**bold** means special):
 * `print` (`claw/interpreter/commands/cmd_print.py`) - Equivalent to `echo` in the Unix shell
 * `static` (`claw/interpreter/commands/cmd_static.py`) - Copies all files in `resource_dir` matching the provided glob into `output_dir/static/`
 * `glob` (`claw/interpreter/commands/cmd_glob.py`) - Finds all files matching the glob (second argument) in the directory (first argument) and stores the resulting list in template variables under the name provided in the third argument. Example: `glob source posts/*.md post_index`. It is worth noting that the directory argument is either source or resource, to switch between the source and resource directory.
+* `sass` (`claw/interpreter/commands/cmd_sass.py`) - Compiles the given sass directory (file) into the target directory (file). The arguments are assumed to be directories unless found to be files.
 
 ### Provided Jinja2 filters
 Claw provides some additional Jinja2 filters (defined in `claw/filters/`).
 
 Currently, by default, there are two filter categories: path and source parse filters.  
 Path filters are just mapping a few `os.path` methods into Jinja2 filters.  
-The source parse category provides two flters: `header` and `markdown`, which read the header and the markdown parts of a source file, respectively.  
+The source parse category provides three flters: `render`, `header` and `markdown`, which render markdown data, or read the header and the markdown parts of a source file, respectively.  
 Both of these filters take only a path argument.
 
 ## Source files
